@@ -18,25 +18,25 @@ NC=\033[0m # No Color
 all : ${NAME}
 
 ${NAME}: ${OBJS}
-	@echo "${GREEN}🔗Linking library...${NC}"
+	@echo "${GREEN}🔗  Linking library...${NC}"
 	@${ARRCS} ${NAME} ${OBJS}
 
 .s.o : 
-	@echo "${GREEN}📇Compiling $<..${NC}"
+	@echo "${GREEN}📇  Compiling $<..${NC}"
 	@${NASM} ${NASM_FLAGS} $< -o ${<:.s=.o}
 
 clean : 
-	@echo "${YELLOW}🗑️ Removing ${OBJS}..${NC}"
+	@echo "${YELLOW}🗑️  Removing ${OBJS}..${NC}"
 	@rm -rf ${OBJS}
 
 fclean : clean
-	@echo "${YELLOW}🗑️ Removing ${NAME}..${NC}"
+	@echo "${YELLOW}🗑️  Removing ${NAME}..${NC}"
 	@rm -rf ${NAME}
-	@echo "${YELLOW}🗑️ Removing main..${NC}"
+	@echo "${YELLOW}🗑️  Removing main..${NC}"
 	@rm -rf ${TEST_EXEC}
 
 test : ${NAME}
-	@echo "${GREEN}📇Compiling Test main..${NC}"
+	@echo "${GREEN}📇  Compiling Test main..${NC}"
 	@gcc test_srcs/main.c -L. -lasm -o ${TEST_EXEC}
 
 assemble :
