@@ -19,7 +19,7 @@ ft_strlen:
 null_case : 
 	; NULL case handle
 	MOV rax, 0; ret value is zero
-	call clean; skip to clean
+	CALL clean; skip to clean
 
 count_loop:
 	; char counter loop

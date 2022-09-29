@@ -1,4 +1,4 @@
-SRCS = ft_strlen.s ft_strcpy.s
+SRCS = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
 OBJS= ${SRCS:.s=.o}
 NASM = nasm
 NASM_FLAGS = -f elf64
@@ -37,7 +37,7 @@ fclean : clean
 
 test : ${NAME}
 	@echo "${GREEN}📇  Compiling Test main..${NC}"
-	@gcc test_srcs/main.c -L. -lasm -o ${TEST_EXEC}
+	@gcc test_srcs/main.c -L. -lasm -o  ${TEST_EXEC} 
 
 assemble :
 	nasm -f elf64 -o data.o data.s
