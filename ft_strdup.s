@@ -3,15 +3,15 @@ extern ft_strcpy
 extern malloc
 
 section .text
-; TODO MAKE THIS MORE ELEGANT
 ; rdi - the pointer to string in memory
 ; rax - the result to be returned
-; r8 - clone of rdi
+; r14 - clone of rdi
 ; cl - the current traversed character
 global ft_strdup
 ft_strdup:
 	; stack frame init
 	PUSH rdi ; push the input parameter to memory
+	PUSH r14; push r14 init state to memory
 	PUSH rbp ; push the current bottom of stack to memory
 	MOV rbp, rsp ; move the bottom stack pointer to curr top stack (create new stack)
 
@@ -44,5 +44,6 @@ copy :
 clean_strdup:
 	; stack frame cleanup
 	POP rbp; restore prev bottom stack to register slot
+	POP r14 ; restore r14 
 	POP rdi ; restore first parameter to register
 	ret; return
