@@ -19,9 +19,12 @@ ft_write:
 	PUSH rbp ; push the current bottom of stack to memory
 	MOV rbp, rsp ; move the bottom stack pointer to curr top stack (create new stack)
 
+	CMP rdx, 0; see if length of string is zero
+	JE length_zero; if yes, jump to length zero
+
 	MOV rax, SYS_WRITE_LINUX; sys_write
 	syscall ; execute syscall
-	JC error; check if syscall failed when carry flag is set on mac
+	; JC error; check if syscall failed when carry flag is set on mac
 	CMP rax, 0; check if syscall failed when negative is returned on linux
 	JLE error
 	JAE clean
@@ -32,6 +35,11 @@ error:
 	CALL  __errno_location WRT ..plt; calls external errno function, will return 
 	MOV [rax], r8; move error code in r8 to errno location return 
 	MOV rax, -1; set ret value to negative
+	JMP clean; jump to clean
+
+length_zero:
+	MOV rax, 0; move 0 to retvalue
+	JMP clean;jump to clean
 
 clean:
 	; stack frame cleanup

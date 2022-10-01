@@ -1,5 +1,7 @@
 SRCS = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
 OBJS= ${SRCS:.s=.o}
+SRCS_BONUS = ${SRCS} ft_atoi_base_bonus.s
+OBJS_BONUS= ${SRCS_BONUS:.s=.o}
 NASM = nasm
 NASM_FLAGS = -f elf64
 ARRCS = ar rcs
@@ -17,6 +19,10 @@ NC=\033[0m # No Color
 
 all : ${NAME}
 
+bonus : ${NAME} ${OBJS_BONUS}
+	@echo "${GREEN}🔗  Linking library Bonus...${NC}"
+	@${ARRCS} ${NAME} ${OBJS_BONUS}
+
 ${NAME}: ${OBJS}
 	@echo "${GREEN}🔗  Linking library...${NC}"
 	@${ARRCS} ${NAME} ${OBJS}
@@ -27,7 +33,7 @@ ${NAME}: ${OBJS}
 
 clean : 
 	@echo "${YELLOW}🗑️  Removing ${OBJS}..${NC}"
-	@rm -rf ${OBJS}
+	@rm -rf ${OBJS} ${OBJS_BONUS}
 
 fclean : clean
 	@echo "${YELLOW}🗑️  Removing ${NAME}..${NC}"
@@ -38,6 +44,11 @@ fclean : clean
 test : ${NAME}
 	@echo "${GREEN}📇  Compiling Test main..${NC}"
 	@gcc test_srcs/main.c -L. -lasm -o  ${TEST_EXEC} 
+
+
+test_bonus : bonus 
+	@echo "${GREEN}📇  Compiling Test main bonus..${NC}"
+	@gcc test_srcs/bonus_main.c -L. -lasm -o  ${TEST_EXEC} 
 
 assemble :
 	nasm -f elf64 -o data.o data.s
