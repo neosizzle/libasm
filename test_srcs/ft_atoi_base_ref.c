@@ -52,7 +52,7 @@ char*	char_in_base(char *base, char *c)
 	return (0);
 }
 
-int	ft_atoi_base(char *str, char *base)
+int	ft_atoi_base_ref(char *str, char *base)
 {
 	char*curr_ptr;
 	int	polarity;
