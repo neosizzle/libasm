@@ -14,27 +14,57 @@ extern	int	ft_atoi_base(char *str, char *base);
 extern void ft_list_push_front(t_list **begin_list, void *data);
 extern int 	ft_list_size(t_list *begin_list);
 extern int ft_list_sort(t_list **begin_list, int (*cmp)());
-// extern int ref_ft_list_sort(t_list **begin_list, int (*cmp)());
+extern void	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)()
+, void (*free_fct)(void *));
 
-static void	ref_ft_list_sort(t_list **begin_list, int (*cmp)())
+//GLOBAL VARS
+//g_prev keeps track of the previouse node
+//g_curr keeps track of the current node
+t_list	*g_prev;
+t_list	*g_curr;
+
+//helper func to free current node and curr node data
+static	void	free_curr(void (*free_fct)(void *))
 {
-	void	*temp;
-	t_list	*curr;
+	free_fct(g_curr->data);
+	free(g_curr);
+}
 
-	if (!begin_list || !*begin_list)
-		return ;
-	curr = *begin_list;
-	while (curr->next)
+//helper function to move curr node forwars
+//and set prev node
+static void	move_forward(void)
+{
+	g_prev = g_curr;
+	g_curr = g_curr->next;
+}
+
+
+void	ref_ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)()
+, void (*free_fct)(void *))
+{
+	t_list	*temp;
+
+	g_curr = *begin_list;
+	while (g_curr && cmp(g_curr->data, data_ref) == 0)
 	{
-		if (cmp(curr->data, curr->next->data) > 0)
-			{
-				temp = curr->data;
-				curr->data = curr->next->data;
-				curr->next->data = temp;
-				curr = *begin_list;
-			}
+		*begin_list = g_curr->next;
+		free_curr(free_fct);
+		g_curr = *begin_list;
+	}
+	if (!g_curr || !g_curr->next)
+		return ;
+	move_forward();
+	while (g_curr)
+	{
+		if (cmp(g_curr->data, data_ref) == 0)
+		{
+			temp = g_curr->next;
+			free_curr(free_fct);
+			g_prev->next = temp;
+			g_curr = temp;
+		}
 		else
-			curr = curr->next;
+			move_forward();
 	}
 }
 
@@ -47,6 +77,8 @@ static void print_list(t_list *head) {
 	}
 	printf("\n");
 }
+
+static void free_fct (void * ptr){ free(ptr); }
 
 int	main(int argc, char **argv)
 {
@@ -61,9 +93,11 @@ int	main(int argc, char **argv)
 	ft_list_push_front(&list, strdup("sec"));
 	ft_list_push_front(&list, strdup("thirds"));
 	ft_list_push_front(&list, strdup("thirds"));
-	print_list(list);
 
-	ft_list_sort(&list, strcmp);
+	// ft_list_remove_if(&list, "sec", strcmp, free_fct);
+	ft_list_remove_if(&list, "thirds", strcmp, free_fct);
+
+
 	print_list(list);
 	return 0;
 }
