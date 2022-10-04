@@ -43,7 +43,7 @@ fclean : clean
 
 test : ${NAME}
 	@echo "${GREEN}📇  Compiling Test main..${NC}"
-	@gcc test_srcs/main.c -L. -lasm -o  ${TEST_EXEC} 
+	@gcc test_srcs/main.c test_srcs/utils/*.c -fsanitize=address -g3 -Itest_srcs/incs -L. -lasm -o  ${TEST_EXEC} && ./main 
 
 
 test_bonus : bonus 
