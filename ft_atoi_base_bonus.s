@@ -180,7 +180,13 @@ polarity_loop:
 	CMP rax, 0;
 	JE result_generation_loop;
 	CMP byte [r8], 45; check if val of curr pointer is -
-	CALL flip_polarity; if yes, run flip polarity
+	JE call_flip_polarity ;if yes, run flip polarity 
+	JNE clean_polarity_loop; if no, proceed with loop
+
+call_flip_polarity:
+	CALL flip_polarity; if yes, run flip polarity 
+
+clean_polarity_loop:
 	INC r8; increment r8
 	JMP polarity_loop; jump to start of loop
 

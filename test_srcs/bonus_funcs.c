@@ -1,14 +1,4 @@
-# include <stdio.h>
-# include <string.h>
-# include <unistd.h>
-# include <errno.h>
-# include <fcntl.h>
-
-typedef struct		s_list
-{
-	void			*data;
-	struct s_list	*next;
-}					t_list;
+#include "main.h"
 
 //helper function to check if base valid
 static int	is_valid_base(char *base)
@@ -53,7 +43,7 @@ static char*	char_in_base(char *base, char *c)
 	return (0);
 }
 
-int	ft_atoi_base_ref(char *str, char *base)
+int	ref_ft_atoi_base(char *str, char *base)
 {
 	char*curr_ptr;
 	int	polarity;

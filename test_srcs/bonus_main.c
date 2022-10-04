@@ -1,103 +1,151 @@
-# include <stdio.h>
-# include <string.h>
-# include <unistd.h>
-# include <errno.h>
-# include <stdlib.h>
+#include "main.h"
 
-typedef struct		s_list
-{
-	void			*data;
-	struct s_list	*next;
-}					t_list;
+static void free_fct (void * ptr){  }
 
-extern	int	ft_atoi_base(char *str, char *base);
-extern void ft_list_push_front(t_list **begin_list, void *data);
-extern int 	ft_list_size(t_list *begin_list);
-extern int ft_list_sort(t_list **begin_list, int (*cmp)());
-extern void	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)()
-, void (*free_fct)(void *));
+static char * list_to_str(t_list *head) {
+	char *res = calloc(2048, 1);
 
-//GLOBAL VARS
-//g_prev keeps track of the previouse node
-//g_curr keeps track of the current node
-t_list	*g_prev;
-t_list	*g_curr;
-
-//helper func to free current node and curr node data
-static	void	free_curr(void (*free_fct)(void *))
-{
-	free_fct(g_curr->data);
-	free(g_curr);
-}
-
-//helper function to move curr node forwars
-//and set prev node
-static void	move_forward(void)
-{
-	g_prev = g_curr;
-	g_curr = g_curr->next;
-}
-
-
-void	ref_ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)()
-, void (*free_fct)(void *))
-{
-	t_list	*temp;
-
-	g_curr = *begin_list;
-	while (g_curr && cmp(g_curr->data, data_ref) == 0)
-	{
-		*begin_list = g_curr->next;
-		free_curr(free_fct);
-		g_curr = *begin_list;
-	}
-	if (!g_curr || !g_curr->next)
-		return ;
-	move_forward();
-	while (g_curr)
-	{
-		if (cmp(g_curr->data, data_ref) == 0)
-		{
-			temp = g_curr->next;
-			free_curr(free_fct);
-			g_prev->next = temp;
-			g_curr = temp;
-		}
-		else
-			move_forward();
-	}
-}
-
-
-static void print_list(t_list *head) {
 	while (head)
 	{
-		printf("%s\n", (char *)head->data);
+		strcat(res, (char *)head->data);
+		strcat(res, "\n");
 		head = head->next;
 	}
-	printf("\n");
+	return res;
 }
 
-static void free_fct (void * ptr){ free(ptr); }
+static void	ft_list_clear(t_list *begin_list, void (*free_fct)(void *))
+{
+	if (!begin_list)
+		return ;
+	ft_list_clear(begin_list->next, free_fct);
+	free_fct(begin_list->data);
+	free(begin_list);
+	return ;
+}
+
+static void atoibasecmp(char *str, char *base)
+{
+	if (ft_atoi_base(str, base) == ref_ft_atoi_base(str, base))
+		ok();
+	else
+	{
+		ko();
+		printf("expected %d, actual %d\n", ref_ft_atoi_base(str, base),ft_atoi_base(str, base));
+	}
+}
+
+static void listcmp(t_list *actual, t_list *expected)
+{
+	char *act_str =  list_to_str(actual);
+	char *exp_str =  list_to_str(expected);
+	if (!strcmp(act_str,exp_str))
+		ok();
+	else
+	{
+		ko();
+	}
+	free(act_str);
+	free(exp_str);
+}
+
+static void listsizecmp(t_list *actual, t_list *expected)
+{
+	int act =  ft_list_size(actual);
+	int exp = ref_ft_list_size(expected);
+	if (act == exp)
+		ok();
+	else
+	{
+		ko();
+		printf("actual %d, expected %d\n", act, exp);
+	}
+}
+
 
 int	main(int argc, char **argv)
 {
-	// t_list * list = malloc(sizeof (t_list));
-	// list->data = strdup("second");
-	// list->next = NULL;
-	t_list *list = NULL;
+	printf("%s=========ft_atoi_base=======%s\n", GREEN, NC);
+	atoibasecmp("123", "0123456789");
+	atoibasecmp("+123", "0123456789");
+	atoibasecmp("-123", "0123456789");
+	atoibasecmp("  123", "0123456789");
+	atoibasecmp("++123", "0123456789");
+	atoibasecmp("--123", "0123456789");
+	atoibasecmp("-+123", "0123456789");
+	atoibasecmp("+-123", "0123456789");
+	atoibasecmp("+-    123", "0123456789");
+	atoibasecmp("    12-3", "0123456789");
+	atoibasecmp("haha", "0123456789");
+	atoibasecmp("101010100101", "01");
+	atoibasecmp("112", "01");
+	atoibasecmp("112", "0112");
+	atoibasecmp("qowuyereeee", "qwertyuiop");
+	atoibasecmp("69", "420");
 
-	t_list **head = &list;
 
-	ft_list_push_front(&list, strdup("first"));
-	ft_list_push_front(&list, strdup("sec"));
-	ft_list_push_front(&list, strdup("thirds"));
-	ft_list_push_front(&list, strdup("thirds"));
+	printf("%s=========ft_list_push_front=======%s\n", GREEN, NC);
+	t_list *actual = NULL;
+	t_list *expected = NULL;
 
-	// ft_list_remove_if(&list, "sec", strcmp, free_fct);
-	ft_list_remove_if(&list, "thirds", strcmp, free_fct);
+	ft_list_push_front(&actual, "first");
+	ref_ft_list_push_front(&expected, "first");
 
+	listcmp(actual, expected);
 
-	print_list(list);
+	ft_list_push_front(&actual, "first");
+	ref_ft_list_push_front(&expected, "first");
+
+	listcmp(actual, expected);
+
+	ft_list_push_front(&actual, "actuallyfirst");
+	ref_ft_list_push_front(&expected, "actuallyfirst");
+
+	listcmp(actual, expected);
+
+	ft_list_push_front(&actual, "siuu");
+	ref_ft_list_push_front(&expected, "siuu");
+
+	listcmp(actual, expected);
+
+	printf("%s=========ft_list_size=======%s\n", GREEN, NC);
+	listsizecmp(actual, expected);
+
+	ft_list_push_front(&actual, "first");
+	ft_list_push_front(&expected, "first");
+
+	listsizecmp(actual, expected);
+	listsizecmp(0, 0);
+
+	printf("%s=========ft_list_sort=======%s\n", GREEN, NC);
+
+	ft_list_sort(&actual, strcmp);
+	ref_ft_list_sort(&expected, strcmp);
+
+	listcmp(actual, expected);
+
+	printf("%s=========ft_list_remove_if=======%s\n", GREEN, NC);
+
+	ft_list_remove_if(&actual, "first", strcmp, free_fct);
+	ref_ft_list_remove_if(&expected, "first", strcmp, free_fct);
+
+	listcmp(actual, expected);
+
+	ft_list_remove_if(&actual, "first", strcmp, free_fct);
+	ref_ft_list_remove_if(&expected, "first", strcmp, free_fct);
+
+	listcmp(actual, expected);
+
+	ft_list_remove_if(&actual, "siuu", strcmp, free_fct);
+	ref_ft_list_remove_if(&expected, "siuu", strcmp, free_fct);
+
+	listcmp(actual, expected);
+
+	ft_list_remove_if(&actual, "siudu", strcmp, free_fct);
+	ref_ft_list_remove_if(&expected, "siudu", strcmp, free_fct);
+
+	listcmp(actual, expected);
+	ft_list_clear(actual, free_fct);
+	ft_list_clear(expected, free_fct);
 	return 0;
 }
