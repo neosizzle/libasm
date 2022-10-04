@@ -3,7 +3,8 @@ OBJS= ${SRCS:.s=.o}
 SRCS_BONUS = ${SRCS} ft_atoi_base_bonus.s ft_list_push_front_bonus.s ft_list_size_bonus.s ft_list_sort_bonus.s ft_list_remove_if.s
 OBJS_BONUS= ${SRCS_BONUS:.s=.o}
 NASM = nasm
-NASM_FLAGS = -f elf64
+# NASM_FLAGS = -f elf64
+NASM_FLAGS = -f macho64
 ARRCS = ar rcs
 NAME = libasm.a
 TEST_EXEC = main
@@ -18,6 +19,7 @@ CYAN=\033[0;36m
 NC=\033[0m # No Color
 
 all : ${NAME}
+	@echo "${RED}[FT_WARNING] For macOS, assemble with macho and remove .plt from source, add underscores in func names, the list goes on... should I make a macos ver?${NC}"
 
 bonus : ${NAME} ${OBJS_BONUS}
 	@echo "${GREEN}🔗  Linking library Bonus...${NC}"
@@ -43,7 +45,7 @@ fclean : clean
 
 test : ${NAME}
 	@echo "${GREEN}📇  Compiling Test main..${NC}"
-	@gcc test_srcs/main.c test_srcs/utils/*.c -fsanitize=address -g3 -Itest_srcs/incs -L. -lasm -o  ${TEST_EXEC} && ./main 
+	@gcc test_srcs/main.c test_srcs/utils/*.c ./libasm.a -fsanitize=address -g3 -Itest_srcs/incs -L. -o  ${TEST_EXEC} && ./main 
 
 
 test_bonus : bonus 
