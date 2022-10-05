@@ -3,8 +3,8 @@ OBJS= ${SRCS:.s=.o}
 SRCS_BONUS = ${SRCS} ft_atoi_base_bonus.s ft_list_push_front_bonus.s ft_list_size_bonus.s ft_list_sort_bonus.s ft_list_remove_if.s
 OBJS_BONUS= ${SRCS_BONUS:.s=.o}
 NASM = nasm
-# NASM_FLAGS = -f elf64
-NASM_FLAGS = -f macho64
+NASM_FLAGS = -f elf64
+# NASM_FLAGS = -f macho64
 ARRCS = ar rcs
 NAME = libasm.a
 TEST_EXEC = main
