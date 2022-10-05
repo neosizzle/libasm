@@ -2,8 +2,8 @@ section .text
 
 ; rdi - begin_list
 ; rax - counter & retvalue
-global ft_list_size
-ft_list_size:
+global _ft_list_size
+_ft_list_size:
 	; stack frame init
 	PUSH rbp ; push the current bottom of stack to memory
 	PUSH rdi ; save rdi to memory

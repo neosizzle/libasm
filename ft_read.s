@@ -1,6 +1,5 @@
-extern	__errno_location
 extern	___error
-SYS_READ_MAC equ 0x2000000
+SYS_READ_MAC equ 0x2000003
 SYS_READ_LINUX equ 0
 section .text
 
@@ -9,8 +8,8 @@ section .text
 ; rdx - the length of string to read
 ; rax - the result to be returned
 ; cl - the current traversed character
-global ft_read
-ft_read:
+global _ft_read
+_ft_read:
 	; stack frame init
 	PUSH rdi ; push the input parameter to memory
 	PUSH rsi ; push the input parameter to memory
@@ -22,19 +21,18 @@ ft_read:
 	CMP rdx, 0; see if length of string is zero
 	JE length_zero; if yes, jump to length zero
 
-	MOV rax, SYS_READ_LINUX; sys_write
+	MOV rax, SYS_READ_MAC; sys_write
 	syscall ; execute syscall
-	; JC error; check if syscall failed when carry flag is set on mac
-	CMP rax, 0; check if syscall failed when negative is returned on linux
-	JLE error
-	JAE clean
+	JC error; check if syscall failed when carry flag is set on mac
+	; CMP rax, 0; check if syscall failed when negative is returned on linux
+	; JLE error
+	JMP clean
 
 error:
-	NEG rax; convert rax to positive
-	MOV r8, rax; store err code in register r8
-	CALL  __errno_location WRT ..plt; calls external errno function, will return 
-	MOV [rax], r8; move error code in r8 to errno location return 
-	MOV rax, -1; set ret value to negative
+	MOV r8, rax; save current value from write to r8 (actual errno)
+	call ___error ; call errno to get pointer to errno loation
+	MOV [rax], r8 ; move errno to pointer
+	MOV rax, -1 ; return -1
 	JMP clean; jump to clean
 
 length_zero:

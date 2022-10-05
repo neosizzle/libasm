@@ -1,8 +1,8 @@
-extern ft_strlen
+extern _ft_strlen
 
 section .text
 
-global ft_atoi_base 
+global _ft_atoi_base 
 
 ; helper function to check if base valid
 ; rdi - base to check
@@ -21,7 +21,7 @@ is_valid_base :
 	MOV rbp, rsp ; move the bottom stack pointer to curr top stack (create new stack)
 
 	MOV rbx, rdi; clone rdi to rbx
-	CALL ft_strlen; call ft_strlen(base str);
+	CALL _ft_strlen; call ft_strlen(base str);
 	CMP rax, 2; compare result with 0
 	JB is_valid_base_invalid_base; if less than two, jump to invalid base
 	MOV rcx, rbx; set rcx to point to base
@@ -113,7 +113,7 @@ clean_char_in_base:
 ; r9 - clone of rsi (base)
 ; r10 - soon to be return value
 ; r11 - polarity
-ft_atoi_base:
+_ft_atoi_base:
 	; stack frame init
 	PUSH rdi ; push string init state to memory
 	PUSH rsi ; push base init state to memory
@@ -192,7 +192,7 @@ clean_polarity_loop:
 
 result_generation:
 	MOV rdi, r9; move base string into first arg for strlen
-	CALL ft_strlen;
+	CALL _ft_strlen;
 	MUL r10; multiple r10 with rax ////SETS RDX TO 0
 	MOV r10, rax; move res of mult to r10
 	MOV rsi, r8; move curr pointer to 2nd arg for char_in_base

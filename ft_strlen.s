@@ -3,8 +3,8 @@ section .text
 ; rdi - the pointer to string in memory
 ; rax - the result to be returned
 ; cl - the current traversed character
-global ft_strlen
-ft_strlen:
+global _ft_strlen
+_ft_strlen:
 	; stack frame init
 	PUSH rdi ; push the input parameter to memory
 	PUSH rbp ; push the current bottom of stack to memory

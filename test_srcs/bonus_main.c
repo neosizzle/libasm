@@ -118,7 +118,6 @@ int	main(int argc, char **argv)
 	listsizecmp(0, 0);
 
 	printf("%s=========ft_list_sort=======%s\n", GREEN, NC);
-
 	ft_list_sort(&actual, strcmp);
 	ref_ft_list_sort(&expected, strcmp);
 

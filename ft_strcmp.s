@@ -5,8 +5,8 @@ section .text
 ; rax - the result to be returned
 ; cl - the current traversed character in s1
 ; dl - the current traversed character in s2
-global ft_strcmp 
-ft_strcmp:
+global _ft_strcmp 
+_ft_strcmp:
 	; stack frame init
 	PUSH rdi ; push s1 init state to memory
 	PUSH rsi ; push s2 init state to memory

@@ -5,10 +5,10 @@ section .text
 ; r10 - current node
 ; rdx - temp variable to store data
 ; rbx - next node after curr
-; r8 - begin_list copy
+; r12 - begin_list copy
 ; r9 - cmp func copy
-global ft_list_sort
-ft_list_sort:
+global _ft_list_sort
+_ft_list_sort:
 	; stack frame init
 	PUSH rbp ; push the current bottom of stack to memory
 	PUSH rdi ; save rdi to memory
@@ -16,7 +16,7 @@ ft_list_sort:
 	PUSH r10 ; save r10 to memory
 	PUSH rdx ; save rdx to memory
 	PUSH rbx ; save rbx to memory
-	PUSH r8 ; save r8 to memory
+	PUSH r12 ; save r12 to memory
 	PUSH r9 ; save r9 to memory
 	MOV rbp, rsp ; move the bottom stack pointer to curr top stack (create new stack)
 
@@ -27,7 +27,7 @@ ft_list_sort:
 
 	MOV r10, [rdi] ; curr = *begin_list
 
-	MOV r8, rdi; begin list copy
+	MOV r12, rdi; begin list copy
 	MOV r9, rsi; cmp func copy
 
 iter_loop:
@@ -43,11 +43,13 @@ iter_loop:
 	JG move_data_loop ; jump to move_data_loop if res > 0
 
 move_data_loop :
+	MOV rsi, [rbx] ; load next data into rsi
 	MOV rdx, [r10] ; temp = curr->data
 	MOV [r10], rsi ; curr->data = next->data
 	MOV [rbx], rdx ; curr->next->data = temp
-	MOV r10, [r8] ; curr = *begin_list
+	MOV r10, [r12] ; curr = *begin_list
 	JMP iter_loop_end; jump to loop end
+	JMP increm_loop ;
 
 increm_loop :
 	ADD r10, 8; increm r10 by 8 so get -> next
@@ -60,7 +62,7 @@ iter_loop_end:
 clean_ft_list_sort:
 	; stack frame cleanup
 	POP r9 ; restore r9
-	POP r8 ; restore r8
+	POP r12 ; restore r12
 	POP rbx ; restore rbx
 	POP rdx ; restore rdx
 	POP r10 ; restore r10

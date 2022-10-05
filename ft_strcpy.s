@@ -4,8 +4,8 @@ section .text
 ; rsi - the pointer to source string in memory
 ; rax - the result to be returned
 ; cl - the current traversed character in source
-global ft_strcpy
-ft_strcpy:
+global _ft_strcpy
+_ft_strcpy:
 	; stack frame init
 	PUSH rdi ; push the dest parameter to memory
 	PUSH rsi ; push the src parameter to memory

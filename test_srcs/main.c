@@ -53,6 +53,7 @@ static void writecmp(int fd, char *str, int strlen)
 	else
 	{
 		ko();
+		printf("actual %d, expected %d\n", actual_ret, expected_ret);
 	}
 	free(actual_buff);
 	free(expected_buff);

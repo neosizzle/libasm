@@ -1,14 +1,14 @@
-extern free
+extern _free
 
 section .text
 
-global ft_list_remove_if
+global _ft_list_remove_if
 
 ; helper func to free curr node and curr node data
 ; rdi - free function
 ; rbx - curr node copy
 ; rdx - free function copy
-free_curr : 
+_free_curr : 
 	; stack frame init
 	PUSH rbp ; push the current bottom of stack to memory
 	PUSH rdi
@@ -29,7 +29,7 @@ free_curr :
 	MOV rdi, [r11] ; take g_curr->data and put it as first arg
 	CALL rdx ; free_fct(g_curr->data);
 	MOV rdi, rbx ; move curr node ptr to first arg of free
-	CALL free WRT ..plt; call free 
+	CALL _free; call free 
 
 
 	; stack frame cleanup
@@ -65,7 +65,7 @@ move_fwd :
 ; r12 - temp node ptr
 ; r13 - free funct copy
 ; r14 - cmp funct copy 
-ft_list_remove_if:
+_ft_list_remove_if:
 	; stack frame init
 	PUSH rbp ; push the current bottom of stack to memory
 	PUSH rdi
@@ -98,7 +98,7 @@ init_remove_loop :
 	MOV r12, [r11 + 8]; temp = g->curr->next
 	MOV [r9], r12; *begin_list = temp;
 	MOV rdi, r13 ; move free_func as first arg
-	CALL free_curr ; free_curr(free_fct)
+	CALL _free_curr ; free_curr(free_fct)
 	MOV r11, [r9]; g_curr = *begin_list;
 	JMP init_remove_loop ; jump to init remove loop start
 
@@ -119,7 +119,7 @@ main_remove_loop :
 	JNZ main_remove_loop_end ; != 0, jump to loopend
 	MOV r12, [r11 + 8] ; temp = g_curr->next;
 	MOV rdi, r13 ; move free_func as first arg
-	CALL free_curr ; free_curr(free_fct)
+	CALL _free_curr ; free_curr(free_fct)
 	MOV [r10 + 8], r12; g_prev->next = temp
 	MOV r11, r12; g_curr = temp
 	JMP main_remove_loop; go to loop start

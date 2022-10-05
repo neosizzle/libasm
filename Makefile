@@ -50,7 +50,7 @@ test : ${NAME}
 
 test_bonus : bonus 
 	@echo "${GREEN}📇  Compiling Test main bonus..${NC}"
-	@gcc test_srcs/bonus_main.c test_srcs/bonus_funcs.c test_srcs/utils/*.c -Itest_srcs/incs -L. -lasm -o  ${TEST_EXEC} 
+	@gcc test_srcs/bonus_main.c test_srcs/bonus_funcs.c test_srcs/utils/*.c -Itest_srcs/incs -L. -lasm -o  ${TEST_EXEC} && ./main 
 
 assemble :
 	nasm -f elf64 -o data.o data.s
