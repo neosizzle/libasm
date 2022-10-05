@@ -19,7 +19,7 @@ CYAN=\033[0;36m
 NC=\033[0m # No Color
 
 all : ${NAME}
-	@echo "${RED}[FT_WARNING] For macOS, assemble with macho and remove .plt from source, add underscores in func names, the list goes on... should I make a macos ver?${NC}"
+	@echo "${RED}[FT_WARNING] This is the macOS branch${NC}"
 
 bonus : ${NAME} ${OBJS_BONUS}
 	@echo "${GREEN}🔗  Linking library Bonus...${NC}"
